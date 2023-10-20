@@ -38,7 +38,7 @@ DELETE /api/order_items/:order_item_id: Видалити товар з замо�
 =======================================
 Content-Type: application/json
 
----------------Users
+--------------- Users
 -- app.post('/api/users', db.createUser) 
 http://localhost:3000/api/users
 {
@@ -54,7 +54,7 @@ http://localhost:3000/api/users/1
   "password": "777*888"
 }
 
---------------Products
+-------------- Products
 -- app.post('/api/products', db.createProduct) 
 http://localhost:3000/api/products
 {
@@ -72,7 +72,7 @@ http://localhost:3000/api/products/1
   "inventory": "20"
 }
 
-------------------Carts
+------------------ Carts
 -- app.post('/api/carts/:user_id', db.createCarts)
 http://localhost:3000/api/carts/1
   created by id without json!
@@ -81,4 +81,12 @@ http://localhost:3000/api/carts/2
 {
   "user_id": 2,
   "created_at": "2023-10-19T12:00:00.000Z"
+}
+
+------------------ Cart Items
+--  app.post('/api/cart_items/:cart_id', db.createCartItemsByCartId) 
+http://localhost:3000/api/cart_items/1
+{
+  "product_id": 4,
+  "quantity": 7
 }

@@ -42,11 +42,11 @@ app.post('/api/carts/:user_id', db.createCarts)
 app.put('/api/carts/:cart_id', db.updateCarts)
 app.delete('/api/carts/:cart_id', db.deleteCarts)
 
- // 4 Cart Items
-// app.get('/api/cart_items/:cart_id', db.getCartsById)
-// app.post('/api/cart_items/:cart_id', db.createCarts) 
-// app.put('/api/cart_items/:cart_item_id', db.updateCarts)
-// app.delete('/api/cart_items/:cart_item_id', db.deleteCarts)
+  // 4 Cart Items
+app.get('/api/cart_items/:cart_id', db.getCartItemsByUserId)
+app.post('/api/cart_items/:cart_id', db.createCartItemByCartId) 
+app.put('/api/cart_items/:cart_item_id', db.updateCartItemByCartItemId)
+app.delete('/api/cart_items/:cart_item_id', db.deleteCartItemByCartItemId)
 
   // Start server
 app.listen(port, () => {

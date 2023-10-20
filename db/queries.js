@@ -43,9 +43,9 @@ const createUser = (request, response) => {
 
   pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, password], (error, results) => {
     if (error) {
-      response.status(500).send('Internal Server Error');
+      response.status(500).send('Internal Server Error')
     } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
-      response.status(500).send('Internal Server Error');
+      response.status(500).send('Internal Server Error')
     }
     const userId = results.rows[0].user_id;
     // Creating a shopping cart for a user
@@ -53,10 +53,10 @@ const createUser = (request, response) => {
       if (cartError) {
         response.status(500).send('Internal Server Error until created CARTS');
       } else if (!Array.isArray(cartResults.rows) || cartResults.rows.length < 1) {
-      response.status(500).send('Internal Server Error until created CARTS');
+      response.status(500).send('Internal Server Error until created CARTS')
       }
       const cartsCreated = cartResults.rows[0].created_at;
-      response.status(201).send(`User added with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${password}, Carts added at: ${cartsCreated}`);
+      response.status(201).send(`User added with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${password}, Carts added at: ${cartsCreated}`)
     });
   })
 }
@@ -150,7 +150,7 @@ const createProduct = (request, response) => {
 const updateProduct = (request, response) => {
   const product_id = parseInt(request.params.product_id)
   const  { name, description, price, inventory } = request.body
-  console.log('Received data: ', { name, description, price, inventory });
+  console.log('Received data: ', { name, description, price, inventory })
   pool.query(
     'UPDATE products SET name = $1, description = $2, price = $3, inventory = $4 WHERE product_id = $5  RETURNING *',
     [ name, description, price, inventory, product_id ],
@@ -159,9 +159,9 @@ const updateProduct = (request, response) => {
         throw error
       } 
       if (typeof results.rows == 'undefined') {
-        response.status(404).send(`Resource not found`);
+        response.status(404).send(`Resource not found`)
       } else if (Array.isArray(results.rows) && results.rows.length < 1) {
-        response.status(404).send(`User not found`);
+        response.status(404).send(`User not found`)
       } else {
         response.status(200).send(`User modified with ID: ${results.rows[0].product_id}, Name: ${results.rows[0].name}, description: ${results.rows[0].description}, Price: ${results.rows[0].price}, Inventory: ${results.rows[0].inventory}`)         	
       }
@@ -173,14 +173,14 @@ const deleteProducts = (request, response) => {
   const product_id = parseInt(request.params.product_id)
   pool.query('DELETE FROM products WHERE product_id = $1 RETURNING name, description, price, inventory', [product_id], (error, results) => {
     if (error) {
-      throw error;
+      throw error
     }
     
     if (results.rows.length === 0) {
-      response.status(404).send(`Product not found`);
+      response.status(404).send(`Product not found`)
     } else {
-      const deletedProduct = results.rows[0];
-      response.status(200).send(`Product deleted: Name: ${deletedProduct.name}, Description: ${deletedProduct.description}, Price: ${deletedProduct.price}, Inventory: ${deletedProduct.inventory}`);
+      const deletedProduct = results.rows[0]
+      response.status(200).send(`Product deleted: Name: ${deletedProduct.name}, Description: ${deletedProduct.description}, Price: ${deletedProduct.price}, Inventory: ${deletedProduct.inventory}`)
     }
   });
 }
@@ -206,23 +206,23 @@ const createCarts = (request, response) => {
 
   pool.query('INSERT INTO carts (cart_id, user_id) VALUES ($1, $2) RETURNING *', [user_id, user_id], (error, results) => {
     if (error) {
-      response.status(500).send('Internal Server Error');
+      response.status(500).send('Internal Server Error')
     } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
-      response.status(500).send('Internal Server Error');
+      response.status(500).send('Internal Server Error')
     }
 
     const cartId = results.rows[0].cart_id;
-    response.status(201).send(`Cart created with ID: ${cartId} for user with ID: ${user_id}`);
-  });
+    response.status(201).send(`Cart created with ID: ${cartId} for user with ID: ${user_id}`)
+  })
 }
 // Update a cart by its cart_id.
 const updateCarts = (request, response) => {
-  const cart_id = parseInt(request.params.cart_id);
-  const { user_id, created_at } = request.body;
+  const cart_id = parseInt(request.params.cart_id)
+  const { user_id, created_at } = request.body
 
   // Перевірка, чи передані всі необхідні дані для оновлення кошика.
   if (!user_id || !created_at) {
-    return response.status(400).send('User ID and created_at are required for updating the cart.');
+    return response.status(400).send('User ID and created_at are required for updating the cart.')
   }
 
   pool.query(
@@ -234,7 +234,7 @@ const updateCarts = (request, response) => {
       } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
         response.status(404).send('Cart not found');
       } else {
-        response.status(200).send(`Cart updated with ID: ${cart_id}`);
+        response.status(200).send(`Cart updated with ID: ${cart_id}`)
       }
     }
   );
@@ -244,30 +244,99 @@ const deleteCarts = (request, response) => {
   const cart_id = parseInt(request.params.cart_id)
   pool.query('DELETE FROM carts WHERE cart_id = $1 RETURNING *', [cart_id], (error, results) => {
     if (error) {
-      throw error;
-    }
-    
+      throw error
+    }    
     if (results.rows.length === 0) {
-      response.status(404).send(`Carts not found`);
+      response.status(404).send(`Carts not found`)
     } else {
-      const deletedCarts = results.rows[0];
-      response.status(200).send(`Product deleted: Cart_id: ${deletedCarts.cart_id}, User_id: ${deletedCarts.user_id}, Created_at: ${deletedCarts.created_at},`);
+      const deletedCarts = results.rows[0]
+      response.status(200).send(`Product deleted: Cart_id: ${deletedCarts.cart_id}, User_id: ${deletedCarts.user_id}, Created_at: ${deletedCarts.created_at},`)
+    }
+  })
+}
+
+    //========================================== CART ITEMS
+// Get information about a specific product by his product_id.
+const getCartItemsByUserId = (request, response) => {
+  createCartItemsByCartId
+
+  pool.query('SELECT * FROM cart_items WHERE cart_id = $1', [cart_id], (error, results) => {
+    if (error) {
+      response.status(500).send('Internal Server Error')
+      return
+    } else if (results.rows.length === 0) {
+      response.status(404).send(`Shopping cart is empty`)
+      return
+    } else {
+      response.status(200).json(results.rows)
+    }    
+  })
+}
+// POST a new cart_items (add)
+const createCartItemByCartId = (request, response) => {
+  const cart_id = parseInt(request.params.cart_id)
+  const { product_id, quantity } = request.body
+
+  // First, we will get information about the amount of goods in stock
+  pool.query('SELECT inventory FROM products WHERE product_id = $1', [product_id], (error, productResults) => {
+    if (error) {
+      response.status(500).send('Internal Server Error')
+    } else if (productResults.rows.length === 0) {
+      response.status(404).send('Product not found')
+    } else {
+      const availableInventory = productResults.rows[0].inventory
+
+      // Let's check whether the selected quantity of the product does not exceed the quantity in stock
+      if (quantity <= availableInventory) {
+        // Here you can add the product to the cart, as the quantity is valid
+        pool.query('INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *', [cart_id, product_id, quantity], (insertError, results) => {
+          if (insertError) {
+            response.status(500).send('Internal Server Error')
+          } else if (results.rows.length === 0) {
+            response.status(500).send('Internal Server Error')
+          } else {
+            response.status(201).send(`Product added to cart with ID: ${results.rows[0].cart_id}, Product ID: ${results.rows[0].product_id}, Quantity: ${results.rows[0].quantity}`)
+          }
+        });
+      } else {
+        response.status(400).send('Requested quantity exceeds available inventory')
+      }
     }
   });
 }
 
-//     //========================================== CART ITEMS
-// // Get information about a specific product by his product_id.
-// const getProductsById = (request, response) => {
-//   const product_id = parseInt(request.params.product_id)
+// PUT update cart_items using cart_item_id
+const updateCartItemByCartItemId = (request, response) => {
+  const cart_item_id = parseInt(request.params.cart_item_id);
+  const { quantity } = request.body;
+  console.log('Received data: ', { cart_item_id, quantity });
 
-//   pool.query('SELECT * FROM products WHERE product_id = $1', [product_id], (error, results) => {
-//     if (error) {
-//       throw error
-//     }
-//     response.status(200).json(results.rows)
-//   })
-// }
+  pool.query('UPDATE cart_items SET quantity = $1 WHERE cart_item_id = $2 RETURNING *', [quantity, cart_item_id], (error, results) => {
+    if (error) {
+      response.status(500).send('Internal Server Error');
+    } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
+      response.status(404).send('Cart item not found')
+    } else {
+      response.status(200).send(`Cart item updated with ID: ${results.rows[0].cart_item_id}, Quantity: ${results.rows[0].quantity} `)
+    }
+  });
+}
+// DELETE  cart_item using cart_item_id
+const deleteCartItemByCartItemId = (request, response) => {
+  const cart_item_id = parseInt(request.params.cart_item_id)
+  console.log('Received data: ', { cart_item_id })
+
+  pool.query('DELETE FROM cart_items WHERE cart_item_id = $1 RETURNING *', [cart_item_id], (error, results) => {
+    if (error) {
+      response.status(500).send('Internal Server Error')
+    } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
+      response.status(404).send('Cart item not found')
+    } else {
+      response.status(200).send(`Cart item deleted with ID: ${results.rows[0].cart_item_id}`)
+    }
+  });
+}
+
 
 module.exports = {
   getUsers,
@@ -286,4 +355,9 @@ module.exports = {
   createCarts,
   updateCarts,
   deleteCarts,
+
+  getCartItemsByUserId,
+  createCartItemByCartId,
+  updateCartItemByCartItemId,
+  deleteCartItemByCartItemId,
 }
