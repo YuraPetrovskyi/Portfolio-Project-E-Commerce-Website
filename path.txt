@@ -1,0 +1,36 @@
+  1 Користувачі (Users):
+GET /api/users: Отримати список всіх користувачів.
+GET /api/users/:user_id: Отримати інформацію про конкретного користувача за його user_id.
+POST /api/users: Створити нового користувача.
+PUT /api/users/:user_id: Оновити інформацію про користувача за його user_id.
+DELETE /api/users/:user_id: Видалити користувача за його user_id.
+
+  Продукти (Products):
+GET /api/products: Отримати список всіх продуктів.
+GET /api/products/:product_id: Отримати інформацію про конкретний продукт за його product_id.
+POST /api/products: Додати новий продукт.
+PUT /api/products/:product_id: Оновити інформацію про продукт за його product_id.
+DELETE /api/products/:product_id: Видалити продукт за його product_id.
+
+  Кошики (Carts):
+GET /api/carts/:user_id: Отримати кошик користувача за його user_id.
+POST /api/carts/:user_id: Створити новий кошик для користувача за його user_id.
+PUT /api/carts/:cart_id: Оновити кошик за його cart_id.
+DELETE /api/carts/:cart_id: Видалити кошик за його cart_id.
+
+  Елементи кошика (Cart Items):
+GET /api/cart_items/:cart_id: Отримати список елементів кошика за cart_id.
+POST /api/cart_items/:cart_id: Додати товар до кошика за cart_id.
+PUT /api/cart_items/:cart_item_id: Оновити кількість товару в кошику за cart_item_id.
+DELETE /api/cart_items/:cart_item_id: Видалити елемент кошика за cart_item_id.
+
+  Замовлення (Orders):
+GET /api/orders/:user_id: Отримати список замовлень користувача за його user_id.
+POST /api/orders/:user_id: Створити нове замовлення для користувача за user_id.
+PUT /api/orders/:order_id: Оновити статус замовлення за order_id.
+
+  Елементи замовлення (Order Items):
+GET /api/order_items/:order_id: Отримати список товарів в замовленні за order_id.
+POST /api/order_items/:order_id: Додати товар до замовлення за order_id.
+PUT /api/order_items/:order_item_id: Оновити кількість товару в замовленні за order_item_id.
+DELETE /api/order_items/:order_item_id: Видалити товар з замовлення за order_item_id.

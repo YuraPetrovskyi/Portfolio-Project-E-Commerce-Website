@@ -3,10 +3,9 @@ const bodyParser = require('body-parser')  //the built-in body-parser middleware
 const app = express()
 const port = 3000
 
-require('dotenv').config()
+require('dotenv').config() // for .env
 
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;  
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+const db = require('./db/queries')
 
 const user = process.env.user;
 const password = process.env.password;
@@ -20,34 +19,19 @@ app.use(
 app.get('/', (request, response) => {
   response.json({ info: user + password })
 })
+app.get('/api', (request, response) => {
+  response.json({ info: 'you will work with API' })
+})
+    // 1 USERS
+app.get('/api/users', db.getUsers)
+app.get('/api/users/:user_id', db.getUserById)
+app.post('/api/users', db.createUser) 
+app.put('/api/users/:user_id', db.updateUser)
+app.delete('/api/users/:user_id', db.deleteUser)
+
+
+
+  // Start server
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
 })
-
-// const express = require('express')
-// const bodyParser = require('body-parser')  //the built-in body-parser middleware,
-// const app = express()
-// const port = 3000
-
-// const db = require('./queries')
-
-// app.use(bodyParser.json())
-// app.use(
-//   bodyParser.urlencoded({
-//     extended: true,
-//   })
-// )
-
-// app.get('/', (request, response) => {
-//   response.json({ info: 'Node.js, Express, and Postgres API' })
-// })
-
-// app.get('/users', db.getUsers)
-// app.get('/users/:id', db.getUserById)
-// app.post('/users', db.createUser)
-// app.put('/users/:id', db.updateUser)
-// app.delete('/users/:id', db.deleteUser)
-
-// app.listen(port, () => {
-//   console.log(`App running on port ${port}.`)
-// })
