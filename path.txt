@@ -38,21 +38,23 @@ DELETE /api/order_items/:order_item_id: Видалити товар з замо�
 =======================================
 Content-Type: application/json
 
+---------------Users
 -- app.post('/api/users', db.createUser) 
-http://localhost:3000/api/user
+http://localhost:3000/api/users
 {
   "username": "Yurii",
   "email": "yurii@gmail.com",
   "password": "777*888*99"
 }
 -- app.put('/api/users/1', db.updateUser)
-http://localhost:3000/api/user/1
+http://localhost:3000/api/users/1
 {
   "username": "Yura",
   "email": "yura@gmail.com",
   "password": "777*888"
 }
 
+--------------Products
 -- app.post('/api/products', db.createProduct) 
 http://localhost:3000/api/products
 {
@@ -68,4 +70,15 @@ http://localhost:3000/api/products/1
   "description": "Xiaomi Note 13 PRO",
   "price": "400",
   "inventory": "20"
+}
+
+------------------Carts
+-- app.post('/api/carts/:user_id', db.createCarts)
+http://localhost:3000/api/carts/1
+  created by id without json!
+-- app.put('/api/carts/:cart_id', db.updateCarts)
+http://localhost:3000/api/carts/2
+{
+  "user_id": 2,
+  "created_at": "2023-10-19T12:00:00.000Z"
 }

@@ -39,8 +39,14 @@ app.delete('/api/products/:product_id', db.deleteProducts)
   // 3 CARTS
 app.get('/api/carts/:user_id', db.getCartsById)
 app.post('/api/carts/:user_id', db.createCarts) 
-app.put('/api/carts/:cart_id', db.updateProduct)
-app.delete('/api/carts/:cart_id', db.deleteProducts)
+app.put('/api/carts/:cart_id', db.updateCarts)
+app.delete('/api/carts/:cart_id', db.deleteCarts)
+
+ // 4 Cart Items
+// app.get('/api/cart_items/:cart_id', db.getCartsById)
+// app.post('/api/cart_items/:cart_id', db.createCarts) 
+// app.put('/api/cart_items/:cart_item_id', db.updateCarts)
+// app.delete('/api/cart_items/:cart_item_id', db.deleteCarts)
 
   // Start server
 app.listen(port, () => {
