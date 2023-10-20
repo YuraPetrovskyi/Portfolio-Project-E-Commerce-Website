@@ -29,7 +29,18 @@ app.post('/api/users', db.createUser)
 app.put('/api/users/:user_id', db.updateUser)
 app.delete('/api/users/:user_id', db.deleteUser)
 
+   // 2 PRODUCTS
+app.get('/api/products', db.getProducts)
+app.get('/api/products/:product_id', db.getProductsById)
+app.post('/api/products', db.createProduct) 
+app.put('/api/products/:product_id', db.updateProduct)
+app.delete('/api/products/:product_id', db.deleteProducts)
 
+  // 3 CARTS
+app.get('/api/carts/:user_id', db.getCartsById)
+app.post('/api/carts/:user_id', db.createCarts) 
+app.put('/api/carts/:cart_id', db.updateProduct)
+app.delete('/api/carts/:cart_id', db.deleteProducts)
 
   // Start server
 app.listen(port, () => {

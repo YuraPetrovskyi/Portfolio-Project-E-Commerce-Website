@@ -1,4 +1,4 @@
-  1 Користувачі (Users):
+  Користувачі (Users):
 GET /api/users: Отримати список всіх користувачів.
 GET /api/users/:user_id: Отримати інформацію про конкретного користувача за його user_id.
 POST /api/users: Створити нового користувача.
@@ -34,3 +34,38 @@ GET /api/order_items/:order_id: Отримати список товарів в 
 POST /api/order_items/:order_id: Додати товар до замовлення за order_id.
 PUT /api/order_items/:order_item_id: Оновити кількість товару в замовленні за order_item_id.
 DELETE /api/order_items/:order_item_id: Видалити товар з замовлення за order_item_id.
+
+=======================================
+Content-Type: application/json
+
+-- app.post('/api/users', db.createUser) 
+http://localhost:3000/api/user
+{
+  "username": "Yurii",
+  "email": "yurii@gmail.com",
+  "password": "777*888*99"
+}
+-- app.put('/api/users/1', db.updateUser)
+http://localhost:3000/api/user/1
+{
+  "username": "Yura",
+  "email": "yura@gmail.com",
+  "password": "777*888"
+}
+
+-- app.post('/api/products', db.createProduct) 
+http://localhost:3000/api/products
+{
+  "name": "phone",
+  "description": "Xiaomi Note 12 PRO",
+  "price": "400",
+  "inventory": "20"
+}
+-- app.put('/api/products/:product_id', db.updateProduct) 
+http://localhost:3000/api/products/1
+{
+  "name": "phone",
+  "description": "Xiaomi Note 13 PRO",
+  "price": "400",
+  "inventory": "20"
+}
