@@ -49,11 +49,16 @@ app.put('/api/cart_items/:cart_item_id', db.updateCartItemByCartItemId)
 app.delete('/api/cart_items/:cart_item_id', db.deleteCartItemByCartItemId)
 
   // 5 Orders
-app.get('/api/orders/:user_id', db.getOrdersByUserId )
+app.get('/api/orders/:user_id', db.getOrders )
 app.post('/api/orders/:user_id', db.createOrder ) 
 app.put('/api/orders/:order_id', db.updateOrderStatus )
+app.delete('/api/orders/:order_id', db.deleteOrder);
 
-
+// 6 Order Items
+app.get('/api/order_items/:order_id', db.getOrderItems )
+app.post('/api/order_items/:order_id', db.createOrderItem ) 
+app.put('/api/order_items/:order_item_id', db.updateOrderItem )
+app.delete('/api/order_items/:order_item_id', db.deleteOrderItem);
 
 
   // Start server

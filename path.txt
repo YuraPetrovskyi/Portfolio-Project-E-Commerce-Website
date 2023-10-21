@@ -109,3 +109,24 @@ http://localhost:3000/api/cart_items/1
 -- app.post('/api/orders/:user_id', db.createOrder ) 
 http://localhost:3000/api/orders/2
   created by id without json!
+
+-- app.put('/api/orders/:order_id', db.updateOrderStatus )
+http://localhost:3000/api/orders/8
+{
+  "status": "done"  // or "active"
+}
+
+------------------ Orders Items
+
+-- app.post('/api/order_items/:order_id', db.createOrderItem ) 
+http://localhost:3000/api/order_items/6
+{
+  "product_id": 6,
+  "quantity": 5
+}
+
+-- app.put('/api/order_items/:order_item_id', db.updateOrderItem )
+http://localhost:3000/api/order_items/6
+{
+  "quantity": 5
+}
