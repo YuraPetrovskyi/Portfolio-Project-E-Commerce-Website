@@ -39,6 +39,7 @@ DELETE /api/order_items/:order_item_id: Видалити товар з замо�
 Content-Type: application/json
 
 --------------- Users
+
 -- app.post('/api/users', db.createUser) 
 http://localhost:3000/api/users
 {
@@ -46,6 +47,7 @@ http://localhost:3000/api/users
   "email": "yurii@gmail.com",
   "password": "777*888*99"
 }
+
 -- app.put('/api/users/1', db.updateUser)
 http://localhost:3000/api/users/1
 {
@@ -55,6 +57,7 @@ http://localhost:3000/api/users/1
 }
 
 -------------- Products
+
 -- app.post('/api/products', db.createProduct) 
 http://localhost:3000/api/products
 {
@@ -63,6 +66,7 @@ http://localhost:3000/api/products
   "price": "400",
   "inventory": "20"
 }
+
 -- app.put('/api/products/:product_id', db.updateProduct) 
 http://localhost:3000/api/products/1
 {
@@ -73,9 +77,11 @@ http://localhost:3000/api/products/1
 }
 
 ------------------ Carts
+
 -- app.post('/api/carts/:user_id', db.createCarts)
 http://localhost:3000/api/carts/1
   created by id without json!
+
 -- app.put('/api/carts/:cart_id', db.updateCarts)
 http://localhost:3000/api/carts/2
 {
@@ -84,9 +90,22 @@ http://localhost:3000/api/carts/2
 }
 
 ------------------ Cart Items
+
 --  app.post('/api/cart_items/:cart_id', db.createCartItemsByCartId) 
 http://localhost:3000/api/cart_items/1
 {
   "product_id": 4,
   "quantity": 7
 }
+
+--  app.put('/api/cart_items/:cart_item_id', db.createCartItemsByCartId) 
+http://localhost:3000/api/cart_items/1
+{
+  "quantity": 10
+}
+
+------------------ Orders
+
+-- app.post('/api/orders/:user_id', db.createOrder ) 
+http://localhost:3000/api/orders/2
+  created by id without json!

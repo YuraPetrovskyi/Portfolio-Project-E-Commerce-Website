@@ -30,7 +30,8 @@ CREATE TABLE orders (
   order_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES users(user_id),
   total_amount DECIMAL(10, 2) NOT NULL,
-  order_date TIMESTAMP DEFAULT current_timestamp
+  order_date TIMESTAMP DEFAULT current_timestamp,
+  status VARCHAR(50)
 );
 
 CREATE TABLE order_items (

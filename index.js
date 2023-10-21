@@ -48,6 +48,14 @@ app.post('/api/cart_items/:cart_id', db.createCartItemByCartId)
 app.put('/api/cart_items/:cart_item_id', db.updateCartItemByCartItemId)
 app.delete('/api/cart_items/:cart_item_id', db.deleteCartItemByCartItemId)
 
+  // 5 Orders
+app.get('/api/orders/:user_id', db.getOrdersByUserId )
+app.post('/api/orders/:user_id', db.createOrder ) 
+app.put('/api/orders/:order_id', db.updateOrderStatus )
+
+
+
+
   // Start server
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
