@@ -1,17 +1,45 @@
 const Pool = require('pg').Pool
 
-const user = process.env.user;
+const userNameENV = process.env.user;
 const password = process.env.password;
 
 const pool = new Pool({
-  user: user,
+  user: userNameENV,
   host: 'localhost',
   database: 'e_commerce',
   password: password,
   port: 5432,
 })
 
+const bcrypt = require("bcrypt");
+
 //  https://blog.logrocket.com/crud-rest-api-node-js-express-postgresql/
+
+function findByUsername(username, callback) {
+  pool.query('SELECT * FROM users WHERE username = $1', [username], (error, results) => {
+    if (error) {
+      return callback(error, null);
+    }
+    if (results.rows.length === 0) {
+      return callback(null, false);
+    }    
+    const user = results.rows[0];
+    return callback(null, user);
+  });
+}
+
+function findById(id, callback) {
+  pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      return callback(error, null);
+    }
+    if (results.rows.length === 0) {
+      return callback(null, false);
+    }
+    const user = results.rows[0];
+    return callback(null, user);
+  });
+}
 
     //========================================== USERS
 // Get a list of all users.
@@ -34,12 +62,18 @@ const getUserById = (request, response) => {
     response.status(200).json(results.rows)
   })
 }
-// POST a new user (create)
-const createUser = (request, response) => {
+
+
+
+// POST register a new user (create)
+const createUser = async (request, response) => {
   const { username, email, password } = request.body
   console.log('Received data: ', { username, email, password });
+  // Generate salt
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
-  pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, password], (error, results) => {
+  pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPassword], (error, results) => {
     if (error) {
       response.status(500).send('Internal Server Error')
     } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
@@ -54,10 +88,11 @@ const createUser = (request, response) => {
       response.status(500).send('Internal Server Error until created CARTS')
       }
       const cartsCreated = cartResults.rows[0].created_at;
-      response.status(201).send(`User added with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${password}, Carts added at: ${cartsCreated}`)
+      response.status(201).send(`User registered with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${hashedPassword}, Carts added at: ${cartsCreated}`)
     });
   })
 }
+
 //  PUT Update user information by their user_id.
 const updateUser = (request, response) => {
   const user_id = parseInt(request.params.user_id)
@@ -573,6 +608,9 @@ const deleteOrderItem = (request, response) => {
 
 
 module.exports = {
+  findByUsername,
+  findById,
+
   getUsers,
   getUserById,
   createUser,

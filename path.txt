@@ -1,7 +1,7 @@
   Користувачі (Users):
 GET /api/users: Отримати список всіх користувачів.
 GET /api/users/:user_id: Отримати інформацію про конкретного користувача за його user_id.
-POST /api/users: Створити нового користувача.
+POST /api/register: Створити нового користувача.
 PUT /api/users/:user_id: Оновити інформацію про користувача за його user_id.
 DELETE /api/users/:user_id: Видалити користувача за його user_id.
 
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 --------------- Users
 
--- app.post('/api/users', db.createUser) 
+-- app.post('/api/register', db.createUser) 
 http://localhost:3000/api/users
 {
   "username": "Yurii",
