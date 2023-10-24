@@ -18,9 +18,13 @@ const getProductsById = (request, response) => {
     if (error) {
       throw error
     }
+    if (results.rows.length < 1) {
+      return response.status(200).send('The product with this ID does not exist in the database')
+    }
     response.status(200).json(results.rows)
   })
 }
+
 // POST a new product (create)
 const createProduct = (request, response) => {
   const { name, description, price, inventory } = request.body
@@ -74,26 +78,18 @@ const deleteProducts = (request, response) => {
 }
 
 // SEARCH a user by their name.
-function searchProductsName(req, res) {
-  const productName = req.query.name; // Отримуємо параметр "name" з запиту
-  if (!productName) {
-    return res.status(400).json({ error: 'Параметр "name" обов\'язковий' });
+const searchProductsName = (request, response) => {
+  const productName = request.query.name; // Отримуємо параметр "name" з запиту
+  if (!productName || productName.trim() === '') {
+    return response.status(400).json({ error: 'Параметр "name" некоректний' });
   }
-
-  const query = {
-    text: 'SELECT * FROM products WHERE name ILIKE $1',
-    values: [`%${productName}%`],
-  };
-
-  pool.query(query, (error, result) => {
+  pool.query('SELECT * FROM products WHERE name ILIKE  $1', [`%${productName}%`], (error, results) => {
     if (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Помилка пошуку товарів' });
+      return response.status(500).json({ error: 'Помилка пошуку товарів' });
     }
-
-    // Відправте знайдені товари у відповіді
-    res.json(result.rows);
-  });
+    response.json(results.rows);
+  })
 }
 
 
