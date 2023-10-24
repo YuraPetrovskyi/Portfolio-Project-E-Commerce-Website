@@ -14,8 +14,12 @@ const secret = process.env.secret;
 // const bcrypt = require("bcrypt");
 
 // Import data base
-const db = require('./db/queries');
-
+const db_users = require('./db/users');
+const db_products = require('./db/products');
+const db_carts = require('./db/carts');
+const db_cart_items = require('./db/cart_items');
+const db_orders = require('./db/orders');
+const db_order_items = require('./db/order_items');
 
 // Import Passport config
 require('./config/passport');
@@ -30,15 +34,6 @@ app.use(
   })
 );
 
-function ensureAuthentication(req, res, next) {
-  // Complete the if statmenet below:
-  if (req.session.authenticated) {
-    return next();
-  } else {
-    res.status(403).json({ msg: "You're not authorized to view this page" });
-  }
-}
-
 // Passport Config
 app.use(passport.initialize());
 app.use(passport.session());
@@ -51,6 +46,14 @@ app.use(
   })
 )
 
+function ensureAuthentication(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.send('only registered users can view products, please register');
+    // res.redirect("/login"); 
+  }
+}
 
 // Routes
 app.get('/', (request, response) => {
@@ -60,68 +63,53 @@ app.get('/api', (request, response) => {
   response.json({ info: 'you will work with API' })
 })
 
-
-// Register User:
-app.post('/api/register', db.createUser);
-// Log In User:
-app.post('/api/login',
-  passport.authenticate("local", { failureRedirect : "/login"}),  //  щоб обробити автентифікацію та, у разі успіху, серіалізувати користувача для нас, але якщо не буде успіху перенаправить до "/login". -->({ failureRedirect : "/login"})
-  (req, res) => {
-    // res.redirect("/users");
-    console.log('User is logged in')
-    console.log(req.user)
-    res.send('User is logged in')
-  }
-);
-// Log out user:
-app.get('/api/logout', (req, res) => {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }   
-    console.log('User is logged out');
-    res.send('User is logged out');
-  });
-});
-
     // 1 USERS
-app.get('/api/users', db.getUsers)
-app.get('/api/users/:user_id', db.getUserById)
-app.put('/api/users/:user_id', db.updateUser)
-// app.put('/api/users/:user_id', passport.authenticate('local', { failureRedirect: '/login' }), db.updateUser);
+app.post('/api/register', db_users.createUser);
+app.post('/api/login',
+  passport.authenticate("local", { failureRedirect : "/api/login"}),  //  щоб обробити автентифікацію та, у разі успіху, серіалізувати користувача для нас, але якщо не буде успіху перенаправить до "/login". -->({ failureRedirect : "/login"})
+  db_users.logIn
+);
+app.get('/api/logout', db_users.logOut);
 
-app.delete('/api/users/:user_id', db.deleteUser)
+app.get('/api/users', db_users.getUsers)
+app.get('/api/users/:user_id', db_users.getUserById)
+app.put('/api/users/:user_id', db_users.updateUser)
+// app.put('/api/users/:user_id', passport.authenticate('local', { failureRedirect: '/login' }), db.updateUser);
+app.delete('/api/users/:user_id', db_users.deleteUser)
 
   // 2 PRODUCTS
-app.get('/api/products', db.getProducts)
-app.get('/api/products/:product_id', db.getProductsById)
-app.post('/api/products', db.createProduct) 
-app.put('/api/products/:product_id', db.updateProduct)
-app.delete('/api/products/:product_id', db.deleteProducts)
+app.get('/api/products', db_products.getProducts)
+app.get('/api/products/:product_id', db_products.getProductsById)
+app.post('/api/products', db_products.createProduct) 
+app.put('/api/products/:product_id', db_products.updateProduct)
+app.delete('/api/products/:product_id', db_products.deleteProducts)
+
+app.get('/api/products/search', db_products.searchProductsName)
+
 
   // 3 CARTS
-app.get('/api/carts/:user_id', db.getCartsById)
-app.post('/api/carts/:user_id', db.createCarts) 
-app.put('/api/carts/:cart_id', db.updateCarts)
-app.delete('/api/carts/:cart_id', db.deleteCarts)
+app.get('/api/carts/:user_id', db_carts.getCartsById)
+app.post('/api/carts/:user_id', db_carts.createCarts) 
+app.put('/api/carts/:cart_id', db_carts.updateCarts)
+app.delete('/api/carts/:cart_id', db_carts.deleteCarts)
 
   // 4 Cart Items
-app.get('/api/cart_items/:cart_id', db.getCartItemsByUserId)
-app.post('/api/cart_items/:cart_id', db.createCartItemByCartId) 
-app.put('/api/cart_items/:cart_item_id', db.updateCartItemByCartItemId)
-app.delete('/api/cart_items/:cart_item_id', db.deleteCartItemByCartItemId)
+app.get('/api/cart_items/:cart_id', db_cart_items.getCartItemsByUserId)
+app.post('/api/cart_items/:cart_id', db_cart_items.createCartItemByCartId) 
+app.put('/api/cart_items/:cart_item_id', db_cart_items.updateCartItemByCartItemId)
+app.delete('/api/cart_items/:cart_item_id', db_cart_items.deleteCartItemByCartItemId)
 
   // 5 Orders
-app.get('/api/orders/:user_id', db.getOrders )
-app.post('/api/orders/:user_id', db.createOrder ) 
-app.put('/api/orders/:order_id', db.updateOrderStatus )
-app.delete('/api/orders/:order_id', db.deleteOrder);
+app.get('/api/orders/:user_id', db_orders.getOrders )
+app.post('/api/orders/:user_id', db_orders.createOrder ) 
+app.put('/api/orders/:order_id', db_orders.updateOrderStatus )
+app.delete('/api/orders/:order_id', db_orders.deleteOrder);
 
   // 6 Order Items
-app.get('/api/order_items/:order_id', db.getOrderItems )
-app.post('/api/order_items/:order_id', db.createOrderItem ) 
-app.put('/api/order_items/:order_item_id', db.updateOrderItem )
-app.delete('/api/order_items/:order_item_id', db.deleteOrderItem);
+app.get('/api/order_items/:order_id', db_order_items.getOrderItems )
+app.post('/api/order_items/:order_id', db_order_items.createOrderItem ) 
+app.put('/api/order_items/:order_item_id', db_order_items.updateOrderItem )
+app.delete('/api/order_items/:order_item_id', db_order_items.deleteOrderItem);
 
   // Start server
 app.listen(port, () => {
