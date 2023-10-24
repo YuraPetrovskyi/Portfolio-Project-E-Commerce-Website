@@ -87,17 +87,12 @@ app.get('/api/logout', (req, res) => {
     // 1 USERS
 app.get('/api/users', db.getUsers)
 app.get('/api/users/:user_id', db.getUserById)
-
-// app.post('/api/register', db.createUser) 
-
-
-
 app.put('/api/users/:user_id', db.updateUser)
-// app.put('/api/users/:user_id', passport.authenticate('local', { failureRedirect: '/login' }), updateUser);
+// app.put('/api/users/:user_id', passport.authenticate('local', { failureRedirect: '/login' }), db.updateUser);
 
 app.delete('/api/users/:user_id', db.deleteUser)
 
-   // 2 PRODUCTS
+  // 2 PRODUCTS
 app.get('/api/products', db.getProducts)
 app.get('/api/products/:product_id', db.getProductsById)
 app.post('/api/products', db.createProduct) 
@@ -122,12 +117,11 @@ app.post('/api/orders/:user_id', db.createOrder )
 app.put('/api/orders/:order_id', db.updateOrderStatus )
 app.delete('/api/orders/:order_id', db.deleteOrder);
 
-// 6 Order Items
+  // 6 Order Items
 app.get('/api/order_items/:order_id', db.getOrderItems )
 app.post('/api/order_items/:order_id', db.createOrderItem ) 
 app.put('/api/order_items/:order_item_id', db.updateOrderItem )
 app.delete('/api/order_items/:order_item_id', db.deleteOrderItem);
-
 
   // Start server
 app.listen(port, () => {
