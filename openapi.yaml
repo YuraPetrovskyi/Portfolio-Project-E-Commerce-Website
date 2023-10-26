@@ -1,0 +1,216 @@
+openapi: 3.0.3
+info:
+  title: E-Commerce API
+  version: 1.0.0
+  description: >-
+    A fully-functioning e-commerce application REST API that allows users to
+    perform various CRUD operations such as registering an account, browsing
+    products for sale, etc.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /api/users:
+    summary: GET all of the users data
+    description: This path is used to retrieve all of users from users table
+    get:
+      summary: Get all users.
+      description: Get a list of all users.
+      operationId: get_users
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                users:
+                  value: |-
+                    [
+                        {
+                            "user_id": 1,
+                            "username": "Yura2",
+                            "email": "yura2@gmail.com",
+                            "password": "$2b$10$4sLBIl71X9AkSCRx/G7TpeZsXXNwKODVjFEVFvxpbD0zrqya88Ssa"
+                        },
+                        {
+                            "user_id": 2,
+                            "username": "Ana",
+                            "email": "ana@gmail.com",
+                            "password": "$2b$10$9SOgaByhO/mygAwM0nNIau5XA6cl90oGIhXtKc1KRf7phcbrHLUce"
+                        }    
+                    ]
+          description: Success
+      tags:
+        - Users
+  /api/register:
+    summary: New user
+    description: Create new user
+    post:
+      summary: Register a new user.
+      description: Create a new user and a new cart
+      operationId: register_user
+      requestBody:
+        description: A new user object
+        content:
+          application/json:
+            examples:
+              exampleName:
+                value:
+                  username: Yurii
+                  email: yurii@gmail.com
+                  password: 777*888*99
+        required: true
+      responses:
+        '200':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: >-
+                    User registered with ID: ${userId}, Name: ${username},
+                    Email: ${email}, Password: ${hashedPassword}, Carts added
+                    at: ${cartsCreated}
+          description: Succes
+        '400':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: >-
+                    "A user with email address: ${email}  - already exists!
+                    Please choose a different email address or sign in."
+          description: Email address already exists!
+        '500':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: Internal Server Error
+          description: Something wrong
+      tags:
+        - Users
+  /api/users/:user_id:
+    summary: User
+    description: Processing of user data by his ID
+    get:
+      summary: Get user
+      description: Get information about a specific user by user_id.
+      operationId: get_user
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                user:
+                  value: |-
+                    [
+                        {
+                            "user_id": 1,
+                            "username": "Yura2",
+                            "email": "yura2@gmail.com",
+                            "password": "$2b$10$4sLBIl71X9AkSCRx/G7TpeZsXXNwKODVjFEVFvxpbD0zrqya88Ssa"
+                        }
+                    ]
+          description: Succes
+      tags:
+        - Users
+    put:
+      summary: Update user
+      description: Update user information by their user_id.
+      operationId: updait_user
+      requestBody:
+        description: A new user object
+        content:
+          application/json:
+            examples:
+              exampleName:
+                value:
+                  username: Yurii
+                  email: yurii@gmail.com
+                  password: 777*888
+        required: true
+      responses:
+        '200':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                users_id:
+                  value: 'User modified with ID: ${userId}'
+          description: Success
+        '404':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: User not found
+          description: No user with such ID found
+        '500':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: Internal Server Error
+          description: Something wrong
+      tags:
+        - Users
+    delete:
+      summary: Delete user
+      description: Delete a user by their user_id
+      operationId: delete_user
+      responses:
+        '200':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                users_id:
+                  value: 'User deleted with ID: ${user_id}'
+          description: Success
+        '404':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: User not found
+          description: No user with such ID found
+        '500':
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                register:
+                  value: Internal Server Error
+          description: Something wrong
+      tags:
+        - Users
+  /api/login:
+    summary: Log in
+    description: User login
+    post:
+      summary: Log in
+      description: User login
+      operationId: login_user
+      responses:
+        default:
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                login_user:
+                  value: User is logged in
+          description: Success
+      tags:
+        - Users
+  /api/logout:
+    summary: Log out
+    description: User logout
+    get:
+      summary: Log out
+      description: User logout
+      operationId: user_logout
+      responses:
+        default:
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                user_logout:
+                  value: User is logged out
+          description: Success      
+      tags:
+        - Users

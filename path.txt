@@ -63,6 +63,9 @@ http://localhost:3000/api/users/1
 
 -------------- Products
 
+-- app.get('/api/products/search', db_products.searchProductsName)
+http://localhost:3000/api/products/search?name=laptop
+
 -- app.post('/api/products', db.createProduct) 
 http://localhost:3000/api/products
 {
