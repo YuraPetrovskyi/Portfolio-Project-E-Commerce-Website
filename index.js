@@ -85,7 +85,6 @@ app.delete('/api/users/:user_id', db_users.deleteUser);
 
   // 2 PRODUCTS
 app.get('/api/products/search', db_products.searchProductsName);
-
 app.get('/api/products', db_products.getProducts);
 app.get('/api/products/:product_id', db_products.getProductsById);
 app.post('/api/products', db_products.createProduct);

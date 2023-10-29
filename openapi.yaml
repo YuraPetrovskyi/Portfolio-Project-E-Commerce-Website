@@ -9,6 +9,9 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:3000/
+    description: Dev server    
 paths:
   /api/users:
     summary: GET all of the users data
@@ -69,7 +72,7 @@ paths:
                     User registered with ID: ${userId}, Name: ${username},
                     Email: ${email}, Password: ${hashedPassword}, Carts added
                     at: ${cartsCreated}
-          description: Succes
+          description: Successful response
         '400':
           content:
             text/plain; charset=utf-8:
@@ -135,7 +138,7 @@ paths:
               examples:
                 users_id:
                   value: 'User modified with ID: ${userId}'
-          description: Success
+          description: Successful response
         '404':
           content:
             text/plain; charset=utf-8:
@@ -194,7 +197,7 @@ paths:
               examples:
                 login_user:
                   value: User is logged in
-          description: Success
+          description: Successful response
       tags:
         - Users
   /api/logout:
@@ -211,6 +214,254 @@ paths:
               examples:
                 user_logout:
                   value: User is logged out
-          description: Success      
+          description: Successful response
       tags:
         - Users
+        
+        
+  /api/products:
+    summary: Processing of products data
+    description: This path is used to Processing of products data from products table
+    get:
+      summary: Get all products.
+      description: Get a list of all products..
+      operationId: get_products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              examples:
+                users:
+                  value: |-
+                    [
+                        {
+                            "product_id": 1,
+                            "name": "laptop",
+                            "description": "Dell Inspiron 5520",
+                            "price": "1300.00",
+                            "inventory": 10
+                        },
+                        {
+                            "product_id": 3,
+                            "name": "tablet",
+                            "description": "Xiaomi X6",
+                            "price": "500.00",
+                            "inventory": 7
+                        }    
+                    ]
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              examples:
+                error:
+                  value: { error: "An error occurred while processing the request" }
+      tags:
+        - Products
+    post:
+      summary: Create product
+      description: Create a new product.
+      operationId: create_product
+      requestBody:
+        description: A new product object
+        content:
+          application/json:
+            examples:
+              productExample:
+                value:
+                  name: "New Product"
+                  description: "Product description"
+                  price: "100.00"
+                  inventory: 50
+        required: true
+      responses:
+        '201':
+          description: Successful response
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                createdProduct:
+                  value: |-
+                    Product added with ID: ${productId}, Name: ${name},
+                    Description: ${description}, Price: ${price}, Inventory: ${inventory}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                value: Invalid input. Please provide valid product data.
+        
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                error:
+                  message: An error occurred while processing the request
+      tags:
+        - Products
+        
+        
+  /api/products/search:
+    summary: Search products by name
+    description: Get a list of products by their names.
+    get:
+      summary: Serach product
+      description: Search product using products name
+      operationId: search_product
+      parameters:
+        - in: query
+          name: name
+          description: The name of the product to search for.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              examples:
+                products:
+                  value: |-
+                    [
+                        {
+                            "product_id": 1,
+                            "name": "laptop",
+                            "description": "Dell Inspiron 5520",
+                            "price": "1300.00",
+                            "inventory": 10
+                        }
+                    ]
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                  message: Invalid input. Please provide a valid product name.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                error:
+                  message: Product search error
+      tags:
+        - Products
+  /api/products/:product_id:
+    summary: Processing of products data by id
+    description: This path is used to processing data of product from products table
+    get:
+      summary: Get product
+      description: Get information about a specific product by its product_id.
+      operationId: get_product
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                - product_id: 1
+                  name: laptop
+                  description: Dell Inspiron 5520
+                  price: '1300.00'
+                  inventory: 10
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                  message: The product with this ID does not exist in the database
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                error:
+                  message: An error occurred while processing the request
+      tags:
+        - Products
+    put:
+      summary: Update product
+      description: Update product information by its product_id.
+      operationId: update_product
+      requestBody:
+        description: Updated product data
+        content:
+          application/json:
+            examples:
+              productExample:
+                value:
+                  name: "Updated Product"
+                  description: "Updated product description"
+                  price: "150.00"
+                  inventory: 60
+        required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                updatedProduct:
+                  value: |-
+                    Product modified with ID: ${productId}, Name: ${name},
+                    Description: ${description}, Price: ${price}, Inventory: ${inventory}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                  message: Invalid input. Please provide valid product data.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: No product with such ID found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                error:
+                  message: An error occurred while processing the request
+      tags:
+        - Products
+    delete:
+      summary: Delete product
+      description: Delete a product by its product_id.
+      operationId: delete_product
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                deletedProduct:
+                  value: |-
+                    Product deleted: Name: ${name}, Description: ${description},
+                    Price: ${price}, Inventory: ${inventory}
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: No product with such ID found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                error:
+                  message: An error occurred while processing the request
+      tags:
+        - Products
+  
+

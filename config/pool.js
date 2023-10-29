@@ -1,4 +1,4 @@
-const Pool = require('pg').Pool
+const Pool = require('pg').Pool // or const { Pool }  = require('pg')
 
 const userNameENV = process.env.user;
 const password = process.env.password;

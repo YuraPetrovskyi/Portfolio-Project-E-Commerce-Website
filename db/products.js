@@ -5,7 +5,7 @@ const { pool } = require('../config/pool');
 const getProducts = (request, response) => {
   pool.query('SELECT * FROM products ORDER BY product_id ASC', (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ error: 'An error occurred while processing the request' });
     }
     response.status(200).json(results.rows)
   })
@@ -16,10 +16,10 @@ const getProductsById = (request, response) => {
 
   pool.query('SELECT * FROM products WHERE product_id = $1', [product_id], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ error: 'An error occurred while processing the request' });
     }
     if (results.rows.length < 1) {
-      return response.status(200).send('The product with this ID does not exist in the database')
+      return response.status(400).json({ error: 'The product with this ID does not exist in the database' })      
     }
     response.status(200).json(results.rows)
   })
@@ -31,9 +31,9 @@ const createProduct = (request, response) => {
   console.log('Received data: ', { name, description, price, inventory });
   pool.query('INSERT INTO products (name, description, price, inventory) VALUES ($1, $2, $3, $4) RETURNING *', [name, description, price, inventory], (error, results) => {
     if (error) {
-      throw error
+      return response.status(500).json({ error: 'An error occurred while processing the request' });
     } else if (!Array.isArray(results.rows) || results.rows.length < 1) {
-      throw error
+      return response.status(400).json({ value: 'Invalid input. Please provide valid product data.' });
     }
     response.status(201).send(`Products added with ID: ${results.rows[0].product_id}, Name: ${results.rows[0].name}, description: ${results.rows[0].description}, Price: ${results.rows[0].price}, Inventory: ${results.rows[0].inventory}`)
   })
@@ -48,14 +48,14 @@ const updateProduct = (request, response) => {
     [ name, description, price, inventory, product_id ],
     (error, results) => {
       if (error) {
-        throw error
+        return response.status(500).json({ error: 'An error occurred while processing the request' });
       } 
       if (typeof results.rows == 'undefined') {
         response.status(404).send(`Resource not found`)
       } else if (Array.isArray(results.rows) && results.rows.length < 1) {
-        response.status(404).send(`User not found`)
+        response.status(404).send(`No product with such ID found`)
       } else {
-        response.status(200).send(`User modified with ID: ${results.rows[0].product_id}, Name: ${results.rows[0].name}, description: ${results.rows[0].description}, Price: ${results.rows[0].price}, Inventory: ${results.rows[0].inventory}`)         	
+        response.status(200).send(`Product modified with ID: ${results.rows[0].product_id}, Name: ${results.rows[0].name}, description: ${results.rows[0].description}, Price: ${results.rows[0].price}, Inventory: ${results.rows[0].inventory}`)         	
       }
     }
   )
@@ -65,11 +65,11 @@ const deleteProducts = (request, response) => {
   const product_id = parseInt(request.params.product_id)
   pool.query('DELETE FROM products WHERE product_id = $1 RETURNING name, description, price, inventory', [product_id], (error, results) => {
     if (error) {
-      throw error
+      return response.status(500).json({ error: 'An error occurred while processing the request' });
     }
     
     if (results.rows.length === 0) {
-      response.status(404).send(`Product not found`)
+      response.status(404).send(`No product with such ID found`)
     } else {
       const deletedProduct = results.rows[0]
       response.status(200).send(`Product deleted: Name: ${deletedProduct.name}, Description: ${deletedProduct.description}, Price: ${deletedProduct.price}, Inventory: ${deletedProduct.inventory}`)
@@ -81,12 +81,12 @@ const deleteProducts = (request, response) => {
 const searchProductsName = (request, response) => {
   const productName = request.query.name; // Отримуємо параметр "name" з запиту
   if (!productName || productName.trim() === '') {
-    return response.status(400).json({ error: 'Параметр "name" некоректний' });
+    return response.status(400).json({ error: 'Invalid input. Please provide a valid product name.' });
   }
   pool.query('SELECT * FROM products WHERE name ILIKE  $1', [`%${productName}%`], (error, results) => {
     if (error) {
       console.error(error);
-      return response.status(500).json({ error: 'Помилка пошуку товарів' });
+      return response.status(500).json({ error: 'Product search error' });
     }
     response.json(results.rows);
   })
