@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');  //the built-in body-parser middleware,
 
+const cors = require('cors');
+
 //swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
@@ -39,6 +41,8 @@ app.use(
     resave: false,
   })
 );
+
+app.use(cors());
 
 // Passport Config
 app.use(passport.initialize());
